@@ -21,7 +21,8 @@ public class TicTacToe extends JFrame {
     }
 
     private void addComponents() {
-        add(new Board(), BorderLayout.CENTER);
+        Board board = new Board();
+        add(board, BorderLayout.CENTER);
         JPanel statusPanel = new JPanel();
         statusPanel.setSize(300, 100);
         statusPanel.setLayout(new BorderLayout());
@@ -29,5 +30,6 @@ public class TicTacToe extends JFrame {
         statusPanel.add(new StatusBar(), BorderLayout.WEST);
         statusPanel.add(new ResetButton(), BorderLayout.EAST);
         add(statusPanel, BorderLayout.PAGE_END);
+        Controller.setBOARD(board);
     }
 }
