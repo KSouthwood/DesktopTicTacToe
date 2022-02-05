@@ -8,7 +8,7 @@ public class StatusBar extends JLabel {
         setFont(new Font(Font.SERIF, Font.PLAIN, 14));
         setHorizontalTextPosition(SwingConstants.CENTER);
         setName("LabelStatus");
-        setStatus("Game is in development");
+        setStatus(Status.NOT_BEGUN.getMessage());
     }
 
     void setStatus(String text) {

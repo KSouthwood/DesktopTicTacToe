@@ -3,9 +3,9 @@ package tictactoe;
 import javax.swing.*;
 
 public class ResetButton extends JButton {
-    ResetButton() {
+    ResetButton(Controller.Listener listener) {
         super("Reset");
         setName("ButtonReset");
-        addActionListener(new Controller());
+        addActionListener(listener);
     }
 }

@@ -2,13 +2,15 @@ package tictactoe;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 public class Cell extends JButton {
-    Cell(String text) {
+    Cell(String text, ActionListener listener) {
         setName(text);
+        setCell(" ");
         setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
         setFocusPainted(false);
-        addActionListener(new Controller());
+        addActionListener(listener);
     }
 
     void setCell(String text) {
