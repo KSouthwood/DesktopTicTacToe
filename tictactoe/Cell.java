@@ -11,6 +11,7 @@ public class Cell extends JButton {
         setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
         setFocusPainted(false);
         addActionListener(listener);
+        setBackground(Color.LIGHT_GRAY);
     }
 
     void setCell(String text) {
