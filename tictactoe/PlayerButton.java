@@ -20,6 +20,6 @@ public class PlayerButton extends JButton implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        setButtonText("Human".equals(getText()) ? "Computer" : "Human");
+        setButtonText("Human".equals(getText()) ? "Robot" : "Human");
     }
 }

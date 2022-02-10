@@ -3,18 +3,14 @@ package tictactoe;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class TicTacToe extends JFrame {
-    private final ArrayList<Cell> cells = new ArrayList<>();
-    private       JLabel          statusBar;
 
     public TicTacToe() {
         setWindowProperties();
         addComponents();
         setVisible(true);
-        new Controller(cells, statusBar);
     }
 
     /**
@@ -33,23 +29,33 @@ public class TicTacToe extends JFrame {
      * Add in the various components into the game window here.
      */
     private void addComponents() {
-        Controller.Listener listener = new Controller.Listener();
-        defineCells(listener);
+        var cells = defineCells();
+        var playerBtns = definePlayerButtons();
 
-        var buttonBar = createButtonBar(listener);
-        var field = createField();
-        statusBar = createStatusBar();
+        var buttonBar = createButtonBar(playerBtns);
+        var field = createField(cells);
+        var statusBar = createStatusBar();
 
         this.add(buttonBar, BorderLayout.PAGE_START);
         this.add(field, BorderLayout.CENTER);
         this.add(statusBar, BorderLayout.PAGE_END);
+
+        Controller.initialize(cells, statusBar, playerBtns);
+    }
+
+    private ArrayList<PlayerButton> definePlayerButtons() {
+        ArrayList<PlayerButton> buttons = new ArrayList<>();
+        buttons.add(new PlayerButton("ButtonPlayer1"));
+        buttons.add(new PlayerButton("ButtonPlayer2"));
+        return buttons;
     }
 
     /**
      * Create the JPanel which holds the 3 x 3 grid of cells of the tic-tac-toe board.
      * @return JPanel with nine buttons
+     * @param cells ArrayList of Cell
      */
-    private JPanel createField() {
+    private JPanel createField(ArrayList<Cell> cells) {
         JPanel jPanel = new JPanel(new GridLayout(3, 3));
         jPanel.setPreferredSize(new Dimension(360, 360));
 
@@ -63,16 +69,17 @@ public class TicTacToe extends JFrame {
     /**
      * Instantiates the JButtons with their name and associated listener method.
      * Adds each one to the ArrayList<Cell> field.
-     * @param listener to handle when the button is clicked
      */
-    private void defineCells(ActionListener listener) {
+    private ArrayList<Cell> defineCells() {
+        ArrayList<Cell> cells = new ArrayList<>();
         String[] rowNames = {"3", "2", "1"};
         String[] colNames = {"A", "B", "C"};
         for (var row : rowNames) {
             for (var col : colNames) {
-                cells.add(new Cell("Button" + col + row, listener));
+                cells.add(new Cell("Button" + col + row));
             }
         }
+        return cells;
     }
 
     private JLabel createStatusBar() {
@@ -89,17 +96,17 @@ public class TicTacToe extends JFrame {
 
     /**
      * Create the button bar holding the player toggle buttons and the game start/reset button.
-     * @param listener ActionListener for the ResetButton
      * @return JPanel with the three buttons
+     * @param buttons ArrayList of PlayerButton
      */
-    private JPanel createButtonBar(ActionListener listener) {
+    private JPanel createButtonBar(ArrayList<PlayerButton> buttons) {
         JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
         buttonBar.setPreferredSize(new Dimension(360, 50));
         buttonBar.setBackground(Color.GRAY);
 
-        buttonBar.add(new PlayerButton("ButtonPlayer1"));
-        buttonBar.add(new ResetButton(listener));
-        buttonBar.add(new PlayerButton("ButtonPlayer2"));
+        buttonBar.add(buttons.get(0));
+        buttonBar.add(new ResetButton());
+        buttonBar.add(buttons.get(1));
 
         return buttonBar;
     }
