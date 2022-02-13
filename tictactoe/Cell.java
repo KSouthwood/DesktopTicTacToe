@@ -11,8 +11,7 @@ public class Cell extends JButton implements ActionListener {
         setCellText(" ");
         setEnabled(false);
         setFont(new Font(Font.SANS_SERIF, Font.BOLD, 50));
-        setBackground(Color.WHITE);
-        setForeground(Color.BLUE);
+        setBackground(Color.LIGHT_GRAY);
         setFocusPainted(false);
         addActionListener(this);
     }
