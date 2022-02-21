@@ -13,7 +13,7 @@ public class Controller {
     private static JLabel                  statusBar;
 
     /**
-     * Add a private constructor so we can't mistakenly create a Controller object via new.
+     * Add a private constructor so that we can't mistakenly create a Controller object via new.
      */
     private Controller() {
 
@@ -138,5 +138,9 @@ public class Controller {
         for (Cell cell : cells) {
             cell.setEnabled(false);
         }
+    }
+
+    static void handleMenuItem(MenuItemSpec menuItem) {
+        statusBar.setText(String.format("Menu item %s clicked.", menuItem.getMenuText()));
     }
 }

@@ -3,6 +3,7 @@ package tictactoe;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class TicTacToe extends JFrame {
@@ -32,10 +33,12 @@ public class TicTacToe extends JFrame {
         var cells = defineCells();
         var playerBtns = definePlayerButtons();
 
+        var menuBar = createMenuBar();
         var buttonBar = createButtonBar(playerBtns);
         var field = createField(cells);
         var statusBar = createStatusBar();
 
+        this.setJMenuBar(menuBar);
         this.add(buttonBar, BorderLayout.PAGE_START);
         this.add(field, BorderLayout.CENTER);
         this.add(statusBar, BorderLayout.PAGE_END);
@@ -109,5 +112,28 @@ public class TicTacToe extends JFrame {
         buttonBar.add(buttons.get(1));
 
         return buttonBar;
+    }
+
+    private JMenuBar createMenuBar() {
+        JMenuBar jMenuBar = new JMenuBar();
+        jMenuBar.setName("MenuGame");
+        jMenuBar.setMargin(new Insets(10, 10, 10, 10));
+
+        jMenuBar.add(createGameMenu());
+        return jMenuBar;
+    }
+
+    private JMenu createGameMenu() {
+        JMenu jMenu = new JMenu();
+        jMenu.setText("Game");
+        jMenu.setMnemonic(KeyEvent.VK_G);
+
+        for (var item : MenuItemSpec.values()) {
+            jMenu.add(new MenuItem(item));
+        }
+
+        jMenu.insertSeparator(jMenu.getMenuComponentCount() - 1);
+
+        return jMenu;
     }
 }
