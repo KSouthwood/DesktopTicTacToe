@@ -116,7 +116,6 @@ public class TicTacToe extends JFrame {
 
     private JMenuBar createMenuBar() {
         JMenuBar jMenuBar = new JMenuBar();
-        jMenuBar.setName("MenuGame");
         jMenuBar.setMargin(new Insets(10, 10, 10, 10));
 
         jMenuBar.add(createGameMenu());
@@ -126,6 +125,7 @@ public class TicTacToe extends JFrame {
     private JMenu createGameMenu() {
         JMenu jMenu = new JMenu();
         jMenu.setText("Game");
+        jMenu.setName("MenuGame");
         jMenu.setMnemonic(KeyEvent.VK_G);
 
         for (var item : MenuItemSpec.values()) {
