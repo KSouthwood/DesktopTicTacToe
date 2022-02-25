@@ -23,20 +23,22 @@ public class MenuItem extends JMenuItem implements ActionListener {
 }
 
 enum MenuItemSpec {
-    HUMAN_HUMAN ("Human vs Human", "MenuHumanHuman", KeyEvent.VK_H),
-    HUMAN_ROBOT ("Human vs Robot", "MenuHumanRobot", KeyEvent.VK_X),
-    ROBOT_HUMAN ("Robot vs Human", "MenuRobotHuman", KeyEvent.VK_O),
-    ROBOT_ROBOT ("Robot vs Robot", "MenuRobotRobot", KeyEvent.VK_R),
-    EXIT ("Exit", "MenuExit", KeyEvent.VK_E);
+    HUMAN_HUMAN ("Human vs Human", "MenuHumanHuman", KeyEvent.VK_H, new String[]{"Human", "Human"}),
+    HUMAN_ROBOT ("Human vs Robot", "MenuHumanRobot", KeyEvent.VK_X, new String[]{"Human", "Robot"}),
+    ROBOT_HUMAN ("Robot vs Human", "MenuRobotHuman", KeyEvent.VK_O, new String[]{"Robot", "Human"}),
+    ROBOT_ROBOT ("Robot vs Robot", "MenuRobotRobot", KeyEvent.VK_R, new String[]{"Robot", "Robot"}),
+    EXIT ("Exit", "MenuExit", KeyEvent.VK_E, new String[]{});
 
     private final String itemName;
     private final String menuText;
     private final int keyEvent;
+    private final String[] buttonText;
 
-    MenuItemSpec(String text, String name, int key) {
+    MenuItemSpec(String text, String name, int key, String[] buttonText) {
         this.menuText = text;
         this.itemName = name;
         this.keyEvent = key;
+        this.buttonText = buttonText;
     }
 
     String getItemName() {
@@ -49,5 +51,9 @@ enum MenuItemSpec {
 
     int getKeyEvent() {
         return keyEvent;
+    }
+
+    String[] getButtonText() {
+        return buttonText;
     }
 }
