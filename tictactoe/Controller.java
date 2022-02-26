@@ -2,58 +2,95 @@ package tictactoe;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.text.MessageFormat;
 import java.util.Random;
 
 public class Controller {
-    private static int                     move          = 1;
-    private static boolean                 gameOver      = false;
-    private static ArrayList<Cell>         cells         = new ArrayList<>();
-    private static ArrayList<PlayerButton> playerButtons = new ArrayList<>();
-    private static JLabel                  statusBar;
+    private static final MessageFormat TURN_MSG = new MessageFormat("The turn of {0} Player ({1})");
+    private static final MessageFormat WIN_MSG  = new MessageFormat("The {0} Player ({1}) wins");
+    private static       int           move     = 0;
+    private static       boolean       gameOver = false;
+    private static       GUI           gui;
 
     /**
-     * Add a private constructor so we can't mistakenly create a Controller object via new.
+     * Add a private constructor so that we can't mistakenly create a Controller object via new.
      */
     private Controller() {
 
     }
 
+    static void initialize(final GUI gui) {
+        Controller.gui = gui;
+    }
+
+    static void playCell(final Cell cell) {
+        cell.setCellText(move % 2 == 0 ? "X" : "O");
+        cell.setEnabled(false);
+        move++;
+        gui.setStatus(getTurnMessage());
+
+        checkState();
+        if (!gameOver) {
+            if (move == 9) {
+                gui.setStatus("Draw");
+                endGame();
+            } else {
+                play();
+            }
+        }
+    }
+
     /**
-     * Set our static fields to the necessary values.
-     *
-     * @param cells
-     *         ArrayList of the buttons of the grid
-     * @param statusBar
-     *         JLabel used to display our game messages
-     * @param players
-     *         ArrayList of the player buttons
+     * Checks to see if we have a winner.
+     * <p>
+     * Loops through each row, column and diagonal calling isThreeInARow to check for a winner. If we do have a winner,
+     * update the status message and change the winning line background colors to highlight it.
      */
-    static void initialize(final ArrayList<Cell> cells, final JLabel statusBar,
-                           final ArrayList<PlayerButton> players) {
-        Controller.cells = cells;
-        Controller.statusBar = statusBar;
-        Controller.playerButtons = players;
+    private static void checkState() {
+        final int[][] INDICES = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8}, {0, 4, 8},
+                                 {2, 4, 6}};
+
+        for (int[] index : INDICES) {
+            if (gui.isThreeInARow(index)) {
+                endGame();
+                var player = (move - 1) % 2;
+                if ("X".equals(gui.getCell(index[0]).getCellText())) {
+                    gui.setStatus(WIN_MSG.format(new Object[]{gui.getButtonText(player), "X"}));
+                } else {
+                    gui.setStatus(WIN_MSG.format(new Object[]{gui.getButtonText(player), "O"}));
+                }
+                for (int i : index) {
+                    gui.getCell(i).setBackground(Color.GRAY);
+                }
+            }
+        }
     }
 
-    static void startGame() {
-        gameOver = false;
-        move = 1;
-
-        for (Cell cell : cells) {
-            cell.setEnabled(true);
-        }
-
-        for (PlayerButton playerButton : playerButtons) {
-            playerButton.setEnabled(false);
-        }
-
-        statusBar.setText(Status.IN_PLAY.getMessage());
-
-        playerButtons.get(0).play();
+    private static void endGame() {
+        gameOver = true;
+        gui.enableCells(false);
     }
 
-    static void robotPlayer() {
+    private static String getTurnMessage() {
+        int      player = move % 2;
+        Object[] args   = {gui.getButtonText(player), player == 0 ? "X" : "O"};
+        return TURN_MSG.format(args);
+    }
+
+    private static void play() {
+        if ("Robot".equals(gui.getButtonText(move % 2))) {
+            robotPlayer();
+        }
+    }
+
+    /**
+     * Handle playing for the robot.
+     * <p>
+     * Does nothing more than pick a random cell, check to see if we can play there, and makes the play if we can.
+     * Nothing complex as the test cases for Hyperskill don't actually check if the robot can play or not. Also, this
+     * can be a starting point for implementing different difficulty levels later.
+     */
+    private static void robotPlayer() {
         SwingWorker<Void, Void> worker = new SwingWorker<>() {
             @Override
             protected Void doInBackground() {
@@ -67,9 +104,9 @@ public class Controller {
                 int    play;
                 do {
                     play = space.nextInt(9);
-                } while (!cells.get(play).isEnabled());
+                } while (!gui.getCell(play).isEnabled());
 
-                cells.get(play).doClick();
+                gui.getCell(play).doClick();
                 return null;
             }
         };
@@ -77,66 +114,45 @@ public class Controller {
         worker.execute();
     }
 
-    static void resetBoard() {
-        for (Cell cell : cells) {
-            cell.setCellText(" ");
-            cell.setEnabled(false);
-            cell.setBackground(Color.LIGHT_GRAY);
+    /**
+     * Configures the game for the chosen menu item.
+     *
+     * @param menuItem
+     *         the enum of the chosen menu item
+     */
+    static void handleMenuItem(MenuItemSpec menuItem) {
+        if (menuItem.equals(MenuItemSpec.EXIT)) {
+            System.exit(0);
         }
 
-        for (PlayerButton playerButton : playerButtons) {
-            playerButton.setEnabled(true);
-        }
-
-        statusBar.setText(Status.NOT_BEGUN.getMessage());
+        gui.enableButtons(true);
+        gui.setPlayerButtons(menuItem.getButtonText());
+        gui.menuItemClicked();
     }
 
-    static void playCell(final Cell cell) {
-        cell.setCellText(move++ % 2 == 0 ? "O" : "X");
-        cell.setEnabled(false);
-        if (move > 5) {
-            checkState();
+    /**
+     * Call the correct action when the start/reset button is clicked on.
+     *
+     * @param state
+     *         of the button when pressed
+     */
+    static void startButtonClicked(String state) {
+        if ("Start".equals(state)) {
+            startGame();
         }
 
-        if (move == 10 && !gameOver) {
-            statusBar.setText(Status.DRAW.getMessage());
-            endGame();
-        }
-
-        if (!gameOver) {
-            playerButtons.get((move - 1) % 2).play();
-        }
-    }
-
-    private static void checkState() {
-        final int[][] INDICES = {{0, 1, 2}, {3, 4, 5}, {6, 7, 8}, {0, 3, 6}, {1, 4, 7}, {2, 5, 8},
-                                 {0, 4, 8}, {2, 4, 6}};
-
-        for (int[] index : INDICES) {
-            if (isThreeInARow(index)) {
-                endGame();
-                if ("X".equals(cells.get(index[0]).getCellText())) {
-                    statusBar.setText(Status.X_WON.getMessage());
-                } else {
-                    statusBar.setText(Status.O_WON.getMessage());
-                }
-                for (int i : index) {
-                    cells.get(i).setBackground(Color.GRAY);
-                }
-            }
+        if ("Reset".equals(state)) {
+            gui.resetBoard();
         }
     }
 
-    private static boolean isThreeInARow(final int[] indices) {
-        return cells.get(indices[0]).getCellText().equals(cells.get(indices[1]).getCellText()) &&
-               cells.get(indices[1]).getCellText().equals(cells.get(indices[2]).getCellText()) &&
-               !cells.get(indices[0]).getCellText().equals(" ");
+    private static void startGame() {
+        gameOver = false;
+        move = 0;
+        gui.enableCells(true);
+        gui.enableButtons(false);
+        gui.setStatus(getTurnMessage());
+        play();
     }
 
-    private static void endGame() {
-        gameOver = true;
-        for (Cell cell : cells) {
-            cell.setEnabled(false);
-        }
-    }
 }

@@ -18,10 +18,10 @@ public class ResetButton extends JButton implements ActionListener {
     public void actionPerformed(ActionEvent actionEvent) {
         if ("Reset".equals(getText())) {
             setText("Start");
-            Controller.resetBoard();
+            Controller.startButtonClicked("Reset");
         } else {
             setText("Reset");
-            Controller.startGame();
+            Controller.startButtonClicked("Start");
         }
     }
 }

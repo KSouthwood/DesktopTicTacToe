@@ -18,15 +18,6 @@ public class PlayerButton extends JButton implements ActionListener {
         setText(text);
     }
 
-    /**
-     * Makes a move if we're a Robot, else does nothing.
-     */
-    void play() {
-        if ("Robot".equals(getText())) {
-            Controller.robotPlayer();
-        }
-    }
-
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         setButtonText("Human".equals(getText()) ? "Robot" : "Human");
