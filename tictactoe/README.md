@@ -1,17 +1,12 @@
 # [Desktop Tic-Tac-Toe](https://hyperskill.org/projects/174)
 
 ## About
-Cinema has been a part of the entertainment industry for a long time: a
-good movie is a way to escape reality and live through a variety of
-emotions. The best cinema experience you can get is probably in a cinema
-theatre. In this project, you will crate an application that helps manage
-a cinema theatre: sell tickets, check available seats, see sales
-statistics, and more.
+Everyone is familiar with Tic-tac-toe. Create a version of this game using the Swing graphics library. Teach a 
+computer to play this game and compete against both your friend and AI.
 
 ## Learning Outcomes
-This project is a good opportunity to work with input and output in Java.
-You will deal with multi-dimensional arrays and functions as well as loops
-and conditional statements.
+After finishing this project, you'll get to know a lot about planning and developing a program from scratch, using 
+methods, handling errors, and processing user input.
 
 ### Stage 1: [Setup](https://hyperskill.org/projects/174/stages/897/implement)
 #### _Create the main program window and the playing field._
